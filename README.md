@@ -39,8 +39,8 @@ services:
     container_name: peppermint_postgres
     image: postgres:latest
     restart: always
-    ports:
-      - 5432:5432
+    networks:
+      - internal
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
@@ -51,21 +51,25 @@ services:
   peppermint:
     container_name: peppermint
     image: pepperlabs/peppermint:latest
-    ports:
-      - 3000:3000
-      - 5003:5003
     restart: always
     depends_on:
       - peppermint_postgres
+    networks:
+      - internal 
+    ports:
+      - 3000:3000
+      - 5003:5003
     environment:
       DB_USERNAME: "peppermint"
       DB_PASSWORD: "1234"
       DB_HOST: "peppermint_postgres"
       SECRET: 'peppermint4life'
 
-volumes:
- pgdata:
+networks:
+  internal:
 
+volumes:
+  pgdata:
 ```
 
 Once this is completed then you can go to your server-ip:3000 which was added to the compose file and login.
